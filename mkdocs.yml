@@ -1,0 +1,35 @@
+site_name: MhShoghi Financial Manager
+site_description: Personal Financial Management System
+site_author: MhShoghi
+
+# Beautiful & Professional Theme
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - search.highlight
+    - content.code.copy
+
+# Required Plugins
+plugins:
+  - search
+
+# Navigation Menu
+nav:
+  - Home: index.md
+  - User Guide:
+      - Installation & Setup: guide/installation.md
+      - Getting Started: guide/getting-started.md
+      - Application Features: guide/features.md
+  - Developers:
+      - Contributing to the Project: development/contributing.md
+
+# Additional Settings
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - fenced_code
+  - admonition
