@@ -10,7 +10,7 @@
     {
         "id": 2,
         "type": "expense",
-        "amount": 24100.0,
+        "amount": 22100.0,
         "category": "transportation",
         "description": "",
         "date": "2025/11/28"

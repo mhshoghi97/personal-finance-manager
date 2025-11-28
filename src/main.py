@@ -23,17 +23,26 @@ def main():
         if choice == "1":
             # Show Balance
             show_balance(transactions)
-            pass
         elif choice == "2":
             # Show Transactions
             show_transactions(transactions)
-            pass
         elif choice == "3":
             # Add Transaction
             add_transaction(transactions)
-            pass
         elif choice == "4":
-            print("Thanks! App closed!")
+            # Edit Transaction
+            edit_transactions(transactions)
+        elif choice == "5":
+            # Delete Transaction
+            pass
+        elif choice == "6":
+            # Search Transaction
+            pass
+        elif choice == "7":
+            # Financial Reports
+            pass
+        elif choice == "8":
+            print("\n Thanks. Your data saved!")
             break
         else:
             print("Invalid input. Please try again.")
@@ -46,7 +55,8 @@ def show_main_menu():
     print("1. Show balance")
     print("2. Show transactions history")
     print("3. Add transaction")
-    print("4. Exit")
+    print("4. Edit transactions")
+    print("5. Exit the program")
 
 def load_data():
     """Load data from JSON file"""
@@ -200,6 +210,88 @@ def show_transactions(transactions):
         type_str = "income" if t["type"] == "income" else "expense"
         amount_str = f"{t['amount']:,.0f} $"
         print(f"{t['id']:<4} {t['date']:<12} {type_str:<8} {t['category']:<15} {amount_str:<12} {t['description']}")
+
+def edit_transactions(transactions):
+    """Edit an available transaction"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+    # Show transactions list
+    show_transactions(transactions)
+
+    try:
+        transaction_id = int(input("\nChoice your transaction ID: "))
+    except ValueError:
+        print("Enter a valid transaction ID.")
+        return
+
+    # Find the transaction
+    transaction = find_transaction_by_id(transactions, transaction_id)
+    if not transaction:
+        print(f"Transaction with ID {transaction_id} not found")
+        return
+
+    print(f"\nEdit transaction {transaction['id']:<4}")
+    print(f"Balance: {transaction['amount']} - {transaction['type']} - {transaction['category']:<12}")
+
+    # Show edit menu
+    while True:
+        print("\nWhat field would you like to edit?")
+        print("1. Transaction Type")
+        print("2. Amount")
+        print("3. Category")
+        print("4. Description")
+        print("5. Date")
+        print("6. Save + Exit")
+
+        field_choice = input("Choose your desired input: (1 or 6)").strip()
+
+
+        if field_choice == "1":
+            new_type = get_transaction_type()
+            if new_type:
+                transaction["type"] = new_type
+                print("✅ Transaction type updated and set to " + new_type)
+
+        elif field_choice == "2":
+            new_amount = get_amount()
+            if new_amount:
+                transaction["amount"] = new_amount
+                print("✅ Transaction amount updated and set to " + str(new_amount))
+
+
+        elif field_choice == "3":
+            new_category = input("New category: ").strip()
+            if new_category:
+                transaction["category"] = new_category
+                print("✅ Transaction category updated.")
+
+        elif field_choice == "4":
+            new_description = input("New description: ").strip()
+            transaction["description"] = new_description
+            print("✅ Transaction description updated.")
+
+        elif field_choice == "5":
+            new_date = get_date()
+            if new_date:
+                transaction["date"] = new_date
+                print("✅ Transaction date updated.")
+
+        elif field_choice == "6":
+            save_data(transactions)
+            print("✅ Changes saved.")
+            break
+        else:
+            print("❌ Invalid input field")
+
+def find_transaction_by_id(transactions, transaction_id):
+    """Find transaction by id"""
+    for t in transactions:
+        if t["id"] == transaction_id:
+            return t
+
+    return None
 
 if __name__ == "__main__":
     main()
