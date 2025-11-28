@@ -22,6 +22,7 @@ def main():
 
         if choice == "1":
             # Show Balance
+            show_balance(transactions)
             pass
         elif choice == "2":
             # Show Transactions
@@ -160,6 +161,30 @@ def get_date():
             except ValueError:
                 print("❌ Invalid date format. Use YYYY/MM/DD (e.g., 2019-02-01)")
 
+def show_balance(transactions):
+    """Show current balance"""
+    if not transactions:
+        print("No transactions found.")
+        return
+
+    total_income = sum(t["amount"] for t in transactions if t["type"] == "income")
+    total_expense = sum(t["amount"] for t in transactions if t["type"] == "expense")
+
+    balance = total_income - total_expense
+
+
+    print("\n--- Finance statistics: ---")
+    print(f"Total Income: {total_income} $")
+    print(f"Total Expense: {total_expense} $")
+    print(f"Balance: {balance} $")
+
+
+    if balance > 0:
+        print("🎉 Your financial status is positive")
+    elif balance < 0:
+        print("⚠️ Your financial status is negative")
+    else:
+        print("⚖️ Your balance is zero.")
 
 
 if __name__ == "__main__":

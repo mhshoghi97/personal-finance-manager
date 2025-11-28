@@ -6,5 +6,13 @@
         "category": "Food",
         "description": "No Description",
         "date": "2025/11/28"
+    },
+    {
+        "id": 2,
+        "type": "expense",
+        "amount": 24100.0,
+        "category": "transportation",
+        "description": "",
+        "date": "2025/11/28"
     }
 ]
