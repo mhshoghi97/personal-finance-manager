@@ -26,6 +26,7 @@ def main():
             pass
         elif choice == "2":
             # Show Transactions
+            show_transactions(transactions)
             pass
         elif choice == "3":
             # Add Transaction
@@ -186,6 +187,19 @@ def show_balance(transactions):
     else:
         print("⚖️ Your balance is zero.")
 
+def show_transactions(transactions):
+    """Show transactions"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+    print(f"\n{'ID':<4} {'Date':<12} {'Type':<8} {'Category':<15} {'Amount':<12} {'Description'}")
+    print("-" * 70)
+
+    for t in transactions:
+        type_str = "income" if t["type"] == "income" else "expense"
+        amount_str = f"{t['amount']:,.0f} $"
+        print(f"{t['id']:<4} {t['date']:<12} {type_str:<8} {t['category']:<15} {amount_str:<12} {t['description']}")
 
 if __name__ == "__main__":
     main()
