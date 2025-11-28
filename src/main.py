@@ -22,9 +22,11 @@ def main():
 
         if choice == "1":
             # Show Balance
+            show_balance(transactions)
             pass
         elif choice == "2":
             # Show Transactions
+            show_transactions(transactions)
             pass
         elif choice == "3":
             # Add Transaction
@@ -160,7 +162,44 @@ def get_date():
             except ValueError:
                 print("❌ Invalid date format. Use YYYY/MM/DD (e.g., 2019-02-01)")
 
+def show_balance(transactions):
+    """Show current balance"""
+    if not transactions:
+        print("No transactions found.")
+        return
 
+    total_income = sum(t["amount"] for t in transactions if t["type"] == "income")
+    total_expense = sum(t["amount"] for t in transactions if t["type"] == "expense")
+
+    balance = total_income - total_expense
+
+
+    print("\n--- Finance statistics: ---")
+    print(f"Total Income: {total_income} $")
+    print(f"Total Expense: {total_expense} $")
+    print(f"Balance: {balance} $")
+
+
+    if balance > 0:
+        print("🎉 Your financial status is positive")
+    elif balance < 0:
+        print("⚠️ Your financial status is negative")
+    else:
+        print("⚖️ Your balance is zero.")
+
+def show_transactions(transactions):
+    """Show transactions"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+    print(f"\n{'ID':<4} {'Date':<12} {'Type':<8} {'Category':<15} {'Amount':<12} {'Description'}")
+    print("-" * 70)
+
+    for t in transactions:
+        type_str = "income" if t["type"] == "income" else "expense"
+        amount_str = f"{t['amount']:,.0f} $"
+        print(f"{t['id']:<4} {t['date']:<12} {type_str:<8} {t['category']:<15} {amount_str:<12} {t['description']}")
 
 if __name__ == "__main__":
     main()
