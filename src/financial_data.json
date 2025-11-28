@@ -1,0 +1,10 @@
+[
+    {
+        "id": 1,
+        "type": "income",
+        "amount": 23000.0,
+        "category": "Food",
+        "description": "No Description",
+        "date": "2025/11/28"
+    }
+]
