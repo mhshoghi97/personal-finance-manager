@@ -23,4 +23,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout main
           git merge development --no-ff -m "Auto-merge from development"
-          git push origin main
+          git push https://x-access-token:${PERSONAL_ACCESS_TOKEN}@github.com/${{ github.repository }} main
