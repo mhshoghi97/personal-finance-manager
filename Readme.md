@@ -22,7 +22,9 @@ The alternative objective of this project is to familiarize myself with GitHub a
 - 📝 Complete transaction history  
 - 💾 Automatic data saving  
 - 🗂️ Categorize transactions  
-- 📅 Manage transaction dates  
+- 📅 Manage transaction dates
+- 📝 Delete, edit and update transaction by ID
+- 📊 Financial Reports
 
 
 ## 🚀 Installation and Setup

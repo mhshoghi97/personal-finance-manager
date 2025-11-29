@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from finance_charts import create_chart_manager
 
 
 # File for saving data
@@ -9,6 +10,9 @@ DATA_FILE = "financial_data.json"
 def main():
     """Main function"""
     print("Welcome to the MhShoghi Financial Manager!")
+
+
+    chart_manager = create_chart_manager()
 
     # Loading available data
     transactions = load_data()
@@ -41,7 +45,9 @@ def main():
         elif choice == "7":
             # Financial Reports
             show_financial_reports(transactions)
-        elif choice == "8":
+        elif choice == "9":
+            chart_manager.show_charts_menu(transactions)
+        elif choice == "11":
             print("\n Thanks. Your data saved!")
             break
         else:
@@ -59,6 +65,8 @@ def show_main_menu():
     print("5. Delete transaction")
     print("6. Search transactions")
     print("7. Statistics and Reports")
+
+    print("9. Financial charts")
     # Others
     print("8. Exit the program")
 
