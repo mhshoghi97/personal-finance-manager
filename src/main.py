@@ -34,7 +34,7 @@ def main():
             edit_transactions(transactions)
         elif choice == "5":
             # Delete Transaction
-            pass
+            delete_transaction(transactions)
         elif choice == "6":
             # Search Transaction
             pass
@@ -56,7 +56,9 @@ def show_main_menu():
     print("2. Show transactions history")
     print("3. Add transaction")
     print("4. Edit transactions")
-    print("5. Exit the program")
+    print("5. Delete transaction")
+    # Others
+    print("8. Exit the program")
 
 def load_data():
     """Load data from JSON file"""
@@ -98,7 +100,7 @@ def add_transaction(transactions):
         return
 
     # Get category
-    category = input("What category do you want to add? (Food, transportation, etc").strip()
+    category = input(f"What category do you want to add? (Food, transportation, etc) = ").strip()
 
     # Get description
     description = input("What description do you want to add? (optional)").strip()
@@ -268,6 +270,9 @@ def edit_transactions(transactions):
                 print("✅ Transaction category updated.")
 
         elif field_choice == "4":
+            print("*" * 40)
+            print("You are editing description for transaction ID: ")
+            print(f"Balance: {transaction['amount']} - {transaction['type']} - {transaction['category']:<12}")
             new_description = input("New description: ").strip()
             transaction["description"] = new_description
             print("✅ Transaction description updated.")
@@ -293,6 +298,46 @@ def find_transaction_by_id(transactions, transaction_id):
             return t
 
     return None
+
+def delete_transaction(transactions):
+    """Delete transaction"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+    show_transactions(transactions)
+
+    try:
+        transaction_id = int(input("\nChoice your transaction ID: "))
+    except ValueError:
+        print("Enter a valid transaction ID.")
+        return
+
+
+    # Find transaction
+    transaction = find_transaction_by_id(transactions, transaction_id)
+    if not transaction:
+        print(f"Transaction with ID {transaction_id} not found")
+
+
+    # Display transaction
+    print(f"\nAre you sure you want to delete {transaction['id']}?")
+    type_str = "income" if transaction["type"] == "income" else "expense"
+    print(f" {type_str} - {transaction['category']} - {transaction['amount']:,.0f} $ - {transaction['description']}")
+
+    confirm = input("Type 'yes' for confirmation (y/n): ").strip()
+
+    if confirm == "yes":
+        transactions.remove(transaction)
+
+        # Update ids
+        for i, transaction in enumerate(transactions, 1):
+            transaction['id'] = 1
+        save_data(transactions)
+
+        print("Transaction deleted successfully.")
+    else:
+        print("Aborted.")
 
 if __name__ == "__main__":
     main()
