@@ -37,10 +37,10 @@ def main():
             delete_transaction(transactions)
         elif choice == "6":
             # Search Transaction
-            pass
+            search_transactions(transactions)
         elif choice == "7":
             # Financial Reports
-            pass
+            show_financial_reports(transactions)
         elif choice == "8":
             print("\n Thanks. Your data saved!")
             break
@@ -57,6 +57,8 @@ def show_main_menu():
     print("3. Add transaction")
     print("4. Edit transactions")
     print("5. Delete transaction")
+    print("6. Search transactions")
+    print("7. Statistics and Reports")
     # Others
     print("8. Exit the program")
 
@@ -331,13 +333,222 @@ def delete_transaction(transactions):
         transactions.remove(transaction)
 
         # Update ids
-        for i, transaction in enumerate(transactions, 1):
+        for i, transaction in enumerate(transactions, start=1):
             transaction['id'] = 1
         save_data(transactions)
 
         print("Transaction deleted successfully.")
     else:
         print("Aborted.")
+
+def search_transactions(transactions):
+    """Search transactions by input"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+
+    # Define fields
+    print("\n--- Search in transactions ---")
+    print("1. 🔍 Search based on category")
+    print("2. 📅 Search based on date")
+    print("3. 💰 Search based on transaction type")
+    print("4. 🔎 Search in description")
+
+
+    # choice field input
+    choice = input("Choose your desired input: (1 or 4)")
+
+    if choice == "1":
+        # Search by category
+        search_by_category(transactions)
+    elif choice == "2":
+        # Search by date
+        search_by_date(transactions)
+    elif choice == "3":
+        # Search by type
+        search_by_type(transactions)
+    elif choice == "4":
+        # Search in description
+        search_by_description(transactions)
+    else:
+        print("Invalid input")
+        return
+
+def search_by_category(transactions):
+    """Search transactions by category"""
+    category = input("Your category: ").strip().lower()
+    if not category:
+        print("Category should not be empty.")
+        return
+
+    results = [t for t in transactions if category in t['category'].lower()]
+    show_search_results(results, f"Show results for category '{category}'")
+
+def search_by_date(transactions):
+    """Search transactions by date"""
+    date = input("Date: (YYYY/MM/DD): ").strip()
+    if not date:
+        print("Date should not be empty.")
+        return
+
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+        results = [t for t in transactions if t['date'] == date]
+        show_search_results(results, f"Show results for date '{date}'")
+
+    except ValueError:
+        print("Invalid date")
+
+def search_by_type(transactions):
+    """Search transactions by type"""
+    print("\nTransaction Type:")
+    print("1. Income")
+    print("2. Expense")
+
+    choice = input("Choose 1 or 2:")
+    if choice == "1":
+        results = [t for t in transactions if t['type'] == 'income']
+        show_search_results(results, f"Show results for type 'income'")
+
+    elif choice == "2":
+        results = [t for t in transactions if t['type'] == 'expense']
+        show_search_results(results, f"Show results for type 'expense'")
+    else:
+        print("Invalid input")
+
+def search_by_description(transactions):
+    """Search transactions by description"""
+    keyword = input("Keyword: ").strip().lower()
+    if not keyword:
+        print("Keyword should not be empty.")
+        return
+    results = [t for t in transactions if keyword in t['description'].lower()]
+    show_search_results(results, f"Show results for keyword '{keyword}'")
+
+def show_search_results(results, title):
+    """Show search results"""
+    if not results:
+        print(f"No search results found.")
+        return
+
+    print(f"\n--- {title} ---")
+    print(f" {len(results)} search results found.")
+    print(f"{'ID':<4} {'Date':<12} {'type':<8} {'category':<15} {'amount':<15} {'description':<15}")
+    print("-" * 70)
+
+    for r in results:
+        type_str = "income" if r["type"] == "income" else "expense"
+        amount_str = f"{r['amount']:,.0f} $"
+        print(f"{r['id']:<4} {r['date']:<12} {r['type']:<8} {r['category']:<15}  {amount_str:<15} {r['description']:<15}")
+
+def show_financial_reports(transactions):
+    """Show financial reports"""
+    if not transactions:
+        print("No transaction found for financial reports.")
+        return
+
+    while True:
+        print("\n--- Financial reports ---")
+        print("1. 📋 Summary")
+        print("2. 🏷️ Statistics based on category")
+        print("3. 📅 Monthly report")
+        print("4. 🔙 Main Menu")
+
+        choice = input("Choose your desired input: (1 or 4)").strip()
+
+        if choice == "1":
+            # Summary
+            show_summary_report(transactions)
+            pass
+        elif choice == "2":
+            # category report
+            show_category_report(transactions)
+        elif choice == "3":
+            # monthly report
+            show_monthly_report(transactions)
+        elif choice == "4":
+            break
+        else:
+            print("Invalid input")
+
+def show_summary_report(transactions):
+    """Show summary report"""
+    total_income = sum(t['amount'] for t in transactions if t['type'] == 'income')
+    total_expense = sum(t['amount'] for t in transactions if t['type'] == 'expense')
+    balance = total_income - total_expense
+
+    # income_count = len([t for t in transactions if t['type'] == 'income'])
+    # Update (for better usage and performance)
+    income_count = len([t for t in transactions if t['type'] == 'income'])
+    expense_count = len([t for t in transactions if t['type'] == 'expense'])
+
+
+    print("\n--- 📋 Overall Financial Summary ---")
+    print(f"💰 Total income: {total_income:,.0f} $ ({income_count} transactions)")
+    print(f"💸 Total Expenses: {total_expense:,.0f} $ ({expense_count} transactions)")
+    print(f"💳 Final Balance: {balance:,.0f} $")
+
+    if total_income > 0:
+        savings_ratio = ((total_income - total_expense) / total_income) * 100
+        print(f"🎯 Rate of savings: {savings_ratio:.2f}%")
+
+def show_category_report(transactions):
+    """Show category report"""
+    # Grouping income by category
+    income_by_category = {}
+    for t in transactions:
+        if t['type'] == 'income':
+            income_by_category[t['category']] = income_by_category.get(t['category'],0) + t['amount']
+
+    # Grouping expense by category
+    expense_by_category = {}
+    for t in transactions:
+        if t['type'] == 'expense':
+            expense_by_category[t['category']] = expense_by_category.get(t['category'], 0) + t['amount']
+
+    print("\n--- Statistics based on category ---")
+
+    if income_by_category:
+        print("\n Income by category")
+        for category, amount in sorted(income_by_category.items(), key=lambda x: x[1], reverse=True):
+            percentage = (amount / sum(income_by_category.values())) * 100
+            print(f"{category}: {amount:,.0f} ({percentage:.2f}%)")
+
+    if expense_by_category:
+        print("\n Expenses by category")
+        for category, amount in sorted(expense_by_category.items(), key=lambda x: x[1], reverse=True):
+            percentage = (amount / sum(expense_by_category.values())) * 100
+            print(f"{category}: {amount:,.0f} ({percentage:.2f}%)")
+
+def show_monthly_report(transactions):
+    """Show monthly report"""
+
+    # Define an empty dictionary
+    monthly_data = {}
+    for t in transactions:
+        year_month = t['date'][:7] # YYYY-MM
+
+        if year_month not in monthly_data:
+            monthly_data[year_month] = {'income': 0, 'expense': 0 }
+
+        if t['type'] == 'income':
+            monthly_data[year_month]['income'] += t['amount']
+        else:
+            monthly_data[year_month]['expense'] += t['amount']
+
+    if not monthly_data:
+        print("No monthly data found.")
+        return
+
+    print("\n--- Monthly Report ---")
+    for month, data in sorted(monthly_data.items()):
+        balance = data['income'] - data['expense']
+        print(f"\n {month}")
+        print(f"Income: {data['income']:,.0f} $")
+        print(f"Expense: {data['expense']:,.0f} $")
+        print(f"Balance: {balance:,.0f} $")
+
 
 if __name__ == "__main__":
     main()
