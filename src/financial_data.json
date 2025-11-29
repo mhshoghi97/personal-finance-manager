@@ -14,5 +14,37 @@
         "category": "Azadi",
         "description": "from 99 complex center",
         "date": "2024/12/09"
+    },
+    {
+        "id": 3,
+        "type": "income",
+        "amount": 90000.0,
+        "category": "Azadi",
+        "description": "nothing",
+        "date": "2025/11/29"
+    },
+    {
+        "id": 4,
+        "type": "income",
+        "amount": 23000.0,
+        "category": "rak",
+        "description": "nothing",
+        "date": "2025/11/29"
+    },
+    {
+        "id": 5,
+        "type": "expense",
+        "amount": 1500.0,
+        "category": "Trading",
+        "description": "Buying FxReplay",
+        "date": "2025/11/29"
+    },
+    {
+        "id": 6,
+        "type": "expense",
+        "amount": 1500.0,
+        "category": "Food",
+        "description": "Nothing",
+        "date": "2024/12/17"
     }
 ]
