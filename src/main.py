@@ -37,7 +37,7 @@ def main():
             delete_transaction(transactions)
         elif choice == "6":
             # Search Transaction
-            pass
+            search_transactions(transactions)
         elif choice == "7":
             # Financial Reports
             pass
@@ -57,6 +57,7 @@ def show_main_menu():
     print("3. Add transaction")
     print("4. Edit transactions")
     print("5. Delete transaction")
+    print("6. Search transactions")
     # Others
     print("8. Exit the program")
 
@@ -331,13 +332,114 @@ def delete_transaction(transactions):
         transactions.remove(transaction)
 
         # Update ids
-        for i, transaction in enumerate(transactions, 1):
+        for i, transaction in enumerate(transactions, start=1):
             transaction['id'] = 1
         save_data(transactions)
 
         print("Transaction deleted successfully.")
     else:
         print("Aborted.")
+
+def search_transactions(transactions):
+    """Search transactions by input"""
+    if not transactions:
+        print("No transaction found.")
+        return
+
+
+    # Define fields
+    print("\n--- Search in transactions ---")
+    print("1. 🔍 Search based on category")
+    print("2. 📅 Search based on date")
+    print("3. 💰 Search based on transaction type")
+    print("4. 🔎 Search in description")
+
+
+    # choice field input
+    choice = input("Choose your desired input: (1 or 4)")
+
+    if choice == "1":
+        # Search by category
+        search_by_category(transactions)
+    elif choice == "2":
+        # Search by date
+        search_by_date(transactions)
+    elif choice == "3":
+        # Search by type
+        search_by_type(transactions)
+    elif choice == "4":
+        # Search in description
+        search_by_description(transactions)
+    else:
+        print("Invalid input")
+        return
+
+def search_by_category(transactions):
+    """Search transactions by category"""
+    category = input("Your category: ").strip().lower()
+    if not category:
+        print("Category should not be empty.")
+        return
+
+    results = [t for t in transactions if category in t['category'].lower()]
+    show_search_results(results, f"Show results for category '{category}'")
+
+def search_by_date(transactions):
+    """Search transactions by date"""
+    date = input("Date: (YYYY/MM/DD): ").strip()
+    if not date:
+        print("Date should not be empty.")
+        return
+
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+        results = [t for t in transactions if t['date'] == date]
+        show_search_results(results, f"Show results for date '{date}'")
+
+    except ValueError:
+        print("Invalid date")
+
+def search_by_type(transactions):
+    """Search transactions by type"""
+    print("\nTransaction Type:")
+    print("1. Income")
+    print("2. Expense")
+
+    choice = input("Choose 1 or 2:")
+    if choice == "1":
+        results = [t for t in transactions if t['type'] == 'income']
+        show_search_results(results, f"Show results for type 'income'")
+
+    elif choice == "2":
+        results = [t for t in transactions if t['type'] == 'expense']
+        show_search_results(results, f"Show results for type 'expense'")
+    else:
+        print("Invalid input")
+
+def search_by_description(transactions):
+    """Search transactions by description"""
+    keyword = input("Keyword: ").strip().lower()
+    if not keyword:
+        print("Keyword should not be empty.")
+        return
+    results = [t for t in transactions if keyword in t['description'].lower()]
+    show_search_results(results, f"Show results for keyword '{keyword}'")
+
+def show_search_results(results, title):
+    """Show search results"""
+    if not results:
+        print(f"No search results found.")
+        return
+
+    print(f"\n--- {title} ---")
+    print(f" {len(results)} search results found.")
+    print(f"{'ID':<4} {'Date':<12} {'type':<8} {'category':<15} {'amount':<15} {'description':<15}")
+    print("-" * 70)
+
+    for r in results:
+        type_str = "income" if r["type"] == "income" else "expense"
+        amount_str = f"{r['amount']:,.0f} $"
+        print(f"{r['id']:<4} {r['date']:<12} {r['type']:<8} {r['category']:<15}  {amount_str:<15} {r['description']:<15}")
 
 if __name__ == "__main__":
     main()
